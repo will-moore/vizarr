@@ -244,6 +244,27 @@ export function initLayerStateFromSource(sourceData: SourceData, layerId: string
       rows,
       columns,
       onClick,
+      getTooltip: (hoverInfo) => {
+        console.log('getTooltip', hoverInfo);
+        const [x, y] = hoverInfo.pixel.map(x => x/2);
+        const height = hoverInfo.object?.height;
+        const width = hoverInfo.object?.width;
+        console.log('widht, height', width, height);
+        if (height && width) {
+          const topLeft = hoverInfo.object.polygon[0];
+          const gridWidth = topLeft[0] * -2;
+          const gridHeight = topLeft[1] * -2;
+          const gridX = hoverInfo.coordinate[0] + (gridWidth / 2);
+          const gridY = hoverInfo.coordinate[1] + (gridHeight / 2);
+          const row = parseInt(gridY / height);
+          const column = parseInt(gridX / width);
+          const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+          console.log(letters[row] + column);
+          return letters[row] + (column + 1);
+        } else {
+          return "none"
+        }
+      }
     },
     on: true,
   };

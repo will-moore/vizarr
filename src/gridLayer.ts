@@ -164,18 +164,18 @@ export default class GridLayer<D, P extends GridLayerProps<D> = GridLayerProps<D
 
     if (this.props.pickable) {
       const bottom = top + (rows * (height + spacer));
-      const right = left + (columns * (height + spacer));
+      const right = left + (columns * (width + spacer));
       const polygon = [[left, top], [right, top], [right, bottom], [left, bottom]];
       const layerProps = {
-        data: [{ polygon }],
+        data: [{ polygon, rows, columns, spacer, height, width}],
         getPolygon: (d: any) => d.polygon,
-        getFillColor: [0, 0, 0, 0], // transparent
+        getFillColor: [0, 255, 0, 50], // transparent
         getLineColor: [0, 0, 0, 0],
         pickable: true, // enable picking
         id: `${id}-GridLayer-picking`,
       } as any; // I was having an issue with typescript here....
       const pickableLayer = new SolidPolygonLayer({ ...this.props, ...layerProps });
-      return [pickableLayer, ...gridLayers];
+      return [...gridLayers, pickableLayer];
     }
 
     return gridLayers;
